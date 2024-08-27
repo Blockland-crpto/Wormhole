@@ -1,6 +1,5 @@
 const path = require("path");
 const sqlite3 = require("sqlite3");
-const process = require("process");
 const fs = require("fs");
 
 setupDB();

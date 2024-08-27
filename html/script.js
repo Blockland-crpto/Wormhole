@@ -140,12 +140,6 @@ function deleteAccount() {
 }
 
 function settings() {
-  const button1 = document.getElementById("settingsLogout");
-  const button2 = document.getElementById("settingsChangeUsername");
-  const button3 = document.getElementById("settingsChangePassword");
-  const button4 = document.getElementById("settingsDeleteAccount");
-  const button5 = document.getElementById("settingsBack");
-  
   const keyframeSetup = [[
     { transform: "translateX(200px)" }, // keyframe
     { transform: "translateX(0px)" }, // keyframe
@@ -163,49 +157,6 @@ function settings() {
     { transform: "translateX(0px)" }, // keyframe
   ]];
   
-  const keyframeOptions = [{
-    duration: 2000,
-    direction: "alternate",
-    easing: "ease-in-out",
-    iterations: "1",
-  },{
-    duration: 2100,
-    direction: "alternate",
-    easing: "ease-in-out",
-    iterations: "1",
-  },{
-    duration: 2200,
-    direction: "alternate",
-    easing: "ease-in-out",
-    iterations: "1",
-  },{
-    duration: 2300,
-    direction: "alternate",
-    easing: "ease-in-out",
-    iterations: "1",
-  },{
-    duration: 2400,
-    direction: "alternate",
-    easing: "ease-in-out",
-    iterations: "1",
-  }];
-
-  const rollInKeyframes = [
-    new KeyframeEffect(button1, keyframeSetup[0], keyframeOptions[0]),
-    new KeyframeEffect(button2, keyframeSetup[1], keyframeOptions[1]),
-    new KeyframeEffect(button3, keyframeSetup[2], keyframeOptions[2]),
-    new KeyframeEffect(button4, keyframeSetup[3], keyframeOptions[3]),
-    new KeyframeEffect(button5, keyframeSetup[4], keyframeOptions[4]),
-  ];
-
-  const rollInAnimations = [
-    new Animation(rollInKeyframes[0]),
-    new Animation(rollInKeyframes[1]),
-    new Animation(rollInKeyframes[2]),
-    new Animation(rollInKeyframes[3]),
-    new Animation(rollInKeyframes[4]),
-  ];
-  
   mainDiv.style.display = "none";
   deleteAccountConfirmDiv.style.display = "none";
   changeUsernamePromptDiv.style.display = "none";
@@ -213,8 +164,17 @@ function settings() {
 
   
   settingsDiv.style.display = "block";
-  for (let i = 0; i < rollInAnimations.length; i++) {
-    rollInAnimations[i].play();
+
+  for (let i = 0; i < 5; i++) {
+    const rollInKeyframe = new KeyframeEffect(
+      document.getElementById(`settingsButn${i}`), 
+      keyframeSetup[i], 
+      { duration: 2000 + 100 * i, 
+       direction: "alternate", 
+       easing: "ease-in-out",
+       iterations: "1"});
+    const rollInAnimation = new Animation(rollInKeyframe);
+    rollInAnimation.play();
   }
 }
 
