@@ -9,13 +9,14 @@
     <script src= "socket.io/socket.io.js"></script>
   </head>
   <body onload = "onload()">
+    <!-- various diffrent screen through out the website -->
     <div id = "Main">
       <audio id = "Ding" src = "Ding.mp3"> </audio>
-      <h1 id = "Title"> Chat </h1>
+      <h1 id = "Title"> Wormhole Home </h1>
       <div id = "AccessPort">
-        <label id = "NameLabel"> Username:</label>
-        <br><br>
-        <label id = "userLabel"></label>
+        <label id = "NameLabel"> Username: </label>
+        <br>
+        <button id = "SettingsButton" onclick = "settings()"> Settings </button>
         <br><br>
         <label id = "IDLabel"> Chatroom </label>
         <input id = "IDInput" value = "Room1" type = "text">
@@ -40,7 +41,7 @@
       <br><br>
     </div>
     
-    <div id = "login">
+    <div id = "Login">
       <h1>Welcome to wormhole!</h1>
       <input id = "user" type = "text" placeholder = "Username">
       <input id = "pass" type = "password" placeholder = "Password">
@@ -49,5 +50,42 @@
       <button id = "logon" onclick = "login()">Login</button>
       <button id = "signup" onclick = "signup()">Not a User? Signup!</button>
     </div> 
+
+    <div id = "Settings">
+      <h1>Wormhole Settings</h1>
+      <p id = "welcomeName">Welcome back!</p>
+      <button id = "settingsLogout" onclick = "logout()">Logout of Account</button>
+      <br>
+      <button id = "settingsChangeUsername" onclick = "changeUsernamePrompt()">Change Username</button>
+      <br>
+      <button id = "settingsChangePassword" onclick = "changePasswordPrompt()">Change Password</button>
+      <br>
+      <button id = "settingsDeleteAccount" onclick = "deletePrompt()">Delete Account</button>
+      <br>
+      <button id = "settingsBack" onclick = "loggedIn()">Back</button>
+    </div>
+
+    <div id = "deleteConfirmation">
+      <p>Are you sure you want to delete your account?</p>
+      <button onclick = "deleteAccount()">Yes</button>
+      <button onclick = "settings()">No</button>
+    </div>
+
+    <div id = "changeUsernamePrompt">
+      <p>Enter a new username</p>
+      <input id = "newUsername" type = "text">
+      <button onclick = "changeUsername()">Change</button>
+      <button onclick = "settings()">Cancel</button>
+    </div>
+
+    <div id = "changePasswordPrompt">
+      <p>Enter your old password</p>
+      <input id = "oldPassword" type = "password">
+      <br>
+      <p>Enter your new password</p>
+      <input id = "newPassword" type = "password">
+      <button onclick = "changePassword()">Change</button>
+      <button onclick = "settings()">Cancel</button>
+    </div>
   </body>
 </html>
