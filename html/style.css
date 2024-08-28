@@ -29,7 +29,7 @@ input {
 
 #Title {
   font-size: 300%;
-  font: sans-serif;
+  font-family: 'Segoe UI';
   background: #1e5a80;
   border-radius: 5%
 }

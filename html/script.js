@@ -44,7 +44,7 @@ function loggedIn() {
   loginDiv.style.display = "none";
   mainDiv.style.display = "block";
 
-  document.getElementById("NameLabel").innerHTML = `Username: ${currentUser}`;
+  document.getElementById("NameLabel").innerHTML = `Username:     ${currentUser}`;
   
   socket.on("join", function(room){
     chatRoom.innerHTML = "Chatroom : " + room;
