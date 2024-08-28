@@ -10,18 +10,33 @@
   </head>
   <body onload = "onload()">
     <!-- various diffrent screen through out the website -->
+    <div id = "menuNavBar">
+      <canvas id = "topbar"></canvas>
+      <img id = "logo" class = "topNav" src = "icon.png">
+      <button id = "homeButn0" class = "topNav" onclick = "loggedIn()"> Home </button> 
+      <button id = "homeButn1" class = "topNav" onclick = "settings()"> Settings </button>
+      <button id = "homeButn2" class = "topNav" onclick = "chat()"> Chat </button>
+      <button id = "homeButn3" class = "topNav" onclick = "about()"> About </button>
+      <br><br><br>
+    </div>
+    
     <div id = "Main">
-      <audio id = "Ding" src = "Ding.mp3"> </audio>
-      <h1 id = "Title"> Wormhole Home </h1>
       <div id = "AccessPort">
         <label id = "NameLabel"> Username: </label>
         <br>
-        <button id = "SettingsButton" onclick = "settings()"> Settings </button>
-        <br><br>
-        <label id = "IDLabel"> Chatroom </label>
-        <input id = "IDInput" value = "Room1" type = "text">
-        <input id = "ConnectButton" class = "Button" type = "submit" value = "Connect" onclick = "Connect()">
       </div>
+      <br><br>
+    </div>
+      
+    <div id = "Chat">
+      <audio id = "Ding" src = "Ding.mp3"> </audio>
+      <br>
+      <br>
+      <label id = "IDLabel"> Chatroom </label>
+      <br>
+      <br>
+      <input id = "IDInput" value = "Room1" type = "text">
+      <input id = "ConnectButton" class = "Button" type = "submit" value = "Connect" onclick = "Connect()">
       <h2 id = "RoomID"> Chatroom : None </h2>
       <div id = "Chat">
         <p id = "Message0" class = "Message"> - </p>
@@ -38,11 +53,10 @@
         <input id = "ComposedMessage" type = "text">
         <input id = "SendMessage" onclick="Send()" value = "Send" class = "Button" type = "submit">
       </div>
-      <br><br>
     </div>
-    
+  
     <div id = "Login">
-      <h1>Welcome to wormhole!</h1>
+      <h1 class = "Title">Welcome to wormhole!</h1>
       <input id = "user" type = "text" placeholder = "Username">
       <input id = "pass" type = "password" placeholder = "Password">
       <p id = "invalidPass">Invalid password or username</p>
@@ -52,7 +66,7 @@
     </div> 
 
     <div id = "Settings">
-      <h1>Wormhole Settings</h1>
+      <h1 class = "Title">Wormhole Settings</h1>
       <p id = "welcomeName">Welcome back!</p>
       <button id = "settingsButn0" onclick = "logout()">Logout of Account</button>
       <br>
@@ -87,5 +101,11 @@
       <button onclick = "changePassword()">Change</button>
       <button onclick = "settings()">Cancel</button>
     </div>
+
+    <div id = "About">
+      <p>Author: Alexander Herbert</p>
+      <p>Credits: Uses SocketIO, Uses NodeJS, Thanks to Savvy for icons! </p>
+    </div>
+    
   </body>
 </html>

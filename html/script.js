@@ -9,62 +9,61 @@ var delay = true;
 var currentUser;
 
 let mainDiv;
+let chatDiv;
 let loginDiv;
 let settingsDiv;
 let deleteAccountConfirmDiv;
 let changeUsernamePromptDiv;
 let changePasswordPromptDiv;
+let menuNavDiv;
+let aboutDiv;
+
 
 function onload(){
   mainDiv = document.getElementById("Main");
+  chatDiv = document.getElementById("Chat");
   loginDiv = document.getElementById("Login");
   settingsDiv = document.getElementById("Settings");
+  menuNavDiv = document.getElementById("menuNavBar");
   invalidPasswd = document.getElementById("invalidPass");
   alreadyTakenUser = document.getElementById("alreadyTakenUser");
   deleteAccountConfirmDiv = document.getElementById("deleteConfirmation");
   changeUsernamePromptDiv = document.getElementById("changeUsernamePrompt");
   changePasswordPromptDiv = document.getElementById("changePasswordPrompt");
+  aboutDiv = document.getElementById("About");
   mainDiv.style.display = "none";
+  chatDiv.style.display = "none";
+  menuNavDiv.style.display = "none";
   settingsDiv.style.display = "none";
   deleteAccountConfirmDiv.style.display = "none";
   changeUsernamePromptDiv.style.display = "none";
   changePasswordPromptDiv.style.display = "none";
+  aboutDiv.style.display = "none";
   invalidPasswd.style.visibility = "hidden";
   alreadyTakenUser.style.visibility = "hidden";
   socket = io();
 }
 
+function menuNavAnimation() {
+  const canvas = document.getElementById("topbar");
+  const ctx = canvas.getContext("2d");
+
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+}
+
 function loggedIn() {
+  menuNavAnimation();
+  clearScreen();
   chatIDInput = document.getElementById("IDInput");
   messageInput = document.getElementById("ComposedMessage");
   chatRoom = document.getElementById("RoomID");
   dingSound = document.getElementById("Ding");
-  
-  settingsDiv.style.display = "none";
-  loginDiv.style.display = "none";
+
   mainDiv.style.display = "block";
-
-  document.getElementById("NameLabel").innerHTML = `Username:     ${currentUser}`;
+  menuNavDiv.style.display = "block";
   
-  socket.on("join", function(room){
-    chatRoom.innerHTML = "Chatroom : " + room;
-  });
-
-  socket.on("recieve", function(message){
-    console.log(message);
-    if (messages.length < 9){
-      messages.push(message);
-      dingSound.currentTime = 0;
-      dingSound.play();
-    } else{
-      messages.shift();
-      messages.push(message);
-    }
-    for (i = 0; i < messages.length; i++){
-        document.getElementById("Message"+i).innerHTML = messages[i];
-        document.getElementById("Message"+i).style.color = "#303030";
-    }
-  });
+  document.getElementById("NameLabel").innerHTML = `Username: ${currentUser}`;
 }
 
 function Connect(){
@@ -119,13 +118,12 @@ function signup() {
 }
 
 function logout() {
+  clearScreen();
+  menuNavDiv.style.display = "none";
   socket.emit("logout", currentUser);
   currentUser = null;
-  document.getElementById("userLabel").innerHTML = currentUser;
+  document.getElementById("NameLabel").innerHTML = currentUser;
   loginDiv.style.display = "block";
-  mainDiv.style.display = "none";
-  settingsDiv.style.display = "none";
-  deleteAccountConfirmDiv.style.display = "none";
 }
 
 function deleteAccount() {
@@ -140,6 +138,8 @@ function deleteAccount() {
 }
 
 function settings() {
+  menuNavAnimation();
+  clearScreen();
   const keyframeSetup = [[
     { transform: "translateX(200px)" }, // keyframe
     { transform: "translateX(0px)" }, // keyframe
@@ -157,14 +157,8 @@ function settings() {
     { transform: "translateX(0px)" }, // keyframe
   ]];
   
-  mainDiv.style.display = "none";
-  deleteAccountConfirmDiv.style.display = "none";
-  changeUsernamePromptDiv.style.display = "none";
-  changePasswordPromptDiv.style.display = "none";
-
-  
   settingsDiv.style.display = "block";
-
+  
   for (let i = 0; i < 5; i++) {
     const rollInKeyframe = new KeyframeEffect(
       document.getElementById(`settingsButn${i}`), 
@@ -179,9 +173,7 @@ function settings() {
 }
 
 function deletePrompt() {
-  loginDiv.style.display = "none";
-  mainDiv.style.display = "none";
-  settingsDiv.style.display = "none";
+  clearScreen();
   deleteAccountConfirmDiv.style.display = "block";
 }
 
@@ -217,6 +209,52 @@ function changePassword() {
     if (responce == "success") {
       console.log("changed")
       loggedIn();
+    } else if (responce == "badpassword") {
+      console.log("bad password");
+      
     }
   })
+}
+
+function chat() {
+  menuNavAnimation();
+  clearScreen();
+  chatDiv.style.display = "block";
+  
+  socket.on("join", function(room){
+    chatRoom.innerHTML = "Chatroom : " + room;
+  });
+
+  socket.on("recieve", function(message){
+    console.log(message);
+    if (messages.length < 9){
+      messages.push(message);
+      dingSound.currentTime = 0;
+      dingSound.play();
+    } else{
+      messages.shift();
+      messages.push(message);
+    }
+    for (i = 0; i < messages.length; i++){
+        document.getElementById("Message"+i).innerHTML = messages[i];
+        document.getElementById("Message"+i).style.color = "#303030";
+    }
+  });
+}
+
+function clearScreen() {
+  mainDiv.style.display = "none";
+  chatDiv.style.display = "none";
+  loginDiv.style.display = "none";
+  settingsDiv.style.display = "none";
+  deleteAccountConfirmDiv.style.display = "none";
+  changeUsernamePromptDiv.style.display = "none";
+  changePasswordPromptDiv.style.display = "none";
+  aboutDiv.style.display = "none";
+}
+
+function about() {
+  menuNavAnimation();
+  clearScreen();
+  aboutDiv.style.display = "block";
 }

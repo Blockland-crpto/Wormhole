@@ -145,16 +145,32 @@ io.on('connection', function(socket){
       if (err) {
         throw err;
       }
+      
       for (let i = 0; i < rows.length; i++) {
         if (rows[i].password == currentPassword) {
-          userDB.all("UPDATE users SET password = ? WHERE password = ?", [newPassword, currentPassword], (err) => {
+          userDB.all("SELECT DISTINCT Username username FROM users WHERE Password = ? ORDER BY username ", [currentPassword], (err, rows) => {
             if (err) {
               throw err;
             }
-            socket.emit("changePasswordResponse", "success");
-          });
+            if (rows[0].username == currentUser) {
+              userDB.all("UPDATE users SET password = ? WHERE password = ?", [newPassword, currentPassword], (err) => {
+                if (err) {
+                  throw err;
+                }
+                return socket.emit("changePasswordResponse", "success");
+              });
+            } else {
+              return socket.emit("changePasswordResponse", "badpassword");
+
+            }
+          })
+          
+        } else {
+          return socket.emit("changePasswordResponse", "badpassword");
         }
+        
       }
+      
     });
   });
 });

@@ -1,5 +1,5 @@
 body {
-  background: #f5f5f5;
+  background: #616161;
   color: #303030;
   font-family: 'Segoe UI';
 }
@@ -18,16 +18,54 @@ input {
 }
 
 .Message {
-  color: #525252;
+  color: #979595;
 }
 
-#Main {
-  background: #525252;
+#Chat {
+  background: #949494;
   border-radius: 1%;
-  padding-left: 1%;
 }
 
-#Title {
+#BackButton {
+  top: 100%;
+}
+
+.topNav {
+  position: absolute;
+  top: 0;
+  height: 50px;
+  width: 60px;
+  
+}
+
+#logo {
+  left: 0%; 
+}
+
+#homeButn0 {
+  left: 15%;
+}
+
+#homeButn1 {
+  left: 35%;
+}
+
+#homeButn2 {
+  left: 55%;
+}
+
+#homeButn3 {
+  left: 75%;
+}
+
+#topbar {
+  position: absolute;
+  top: 0;
+  height: 50px;
+  width: 100%;
+}
+
+.Title {
   font-size: 300%;
   font-family: 'Segoe UI';
   background: #1e5a80;
@@ -39,4 +77,9 @@ button {
   background: #00849e;
   border-radius: 10%;
   border-width: 3px;
+  transition: background-color 0.5s;
+}
+
+button:hover {
+  background-color: #e3e3e3;
 }
