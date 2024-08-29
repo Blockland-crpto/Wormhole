@@ -7,6 +7,7 @@ var dingSound;
 var messages = [];
 var delay = true;
 var currentUser;
+var currentUserID;
 
 let mainDiv;
 let chatDiv;
@@ -20,6 +21,11 @@ let aboutDiv;
 
 
 function onload(){
+  const fname = document.getElementById("fname");
+  const lname = document.getElementById("lname");
+  const create = document.getElementById("create");
+  const back = document.getElementById("back");
+  
   mainDiv = document.getElementById("Main");
   chatDiv = document.getElementById("Chat");
   loginDiv = document.getElementById("Login");
@@ -31,6 +37,7 @@ function onload(){
   changeUsernamePromptDiv = document.getElementById("changeUsernamePrompt");
   changePasswordPromptDiv = document.getElementById("changePasswordPrompt");
   aboutDiv = document.getElementById("About");
+  
   mainDiv.style.display = "none";
   chatDiv.style.display = "none";
   menuNavDiv.style.display = "none";
@@ -39,8 +46,14 @@ function onload(){
   changeUsernamePromptDiv.style.display = "none";
   changePasswordPromptDiv.style.display = "none";
   aboutDiv.style.display = "none";
+  
+  fname.style.visibility = "hidden";
+  lname.style.visibility = "hidden";
   invalidPasswd.style.visibility = "hidden";
   alreadyTakenUser.style.visibility = "hidden";
+  create.style.visibility = "hidden";
+  back.style.visibility = "hidden";
+  
   socket = io();
 }
 
@@ -53,17 +66,30 @@ function menuNavAnimation() {
 }
 
 function loggedIn() {
-  menuNavAnimation();
-  clearScreen();
+  const fname = document.getElementById("fname");
+  const lname = document.getElementById("lname");
+  const create = document.getElementById("create");
+  const back = document.getElementById("back");
+  const sideBar = document.getElementById("sideBar");
+  const sideBarCtx = sideBar.getContext("2d"); 
+
   chatIDInput = document.getElementById("IDInput");
   messageInput = document.getElementById("ComposedMessage");
   chatRoom = document.getElementById("RoomID");
   dingSound = document.getElementById("Ding");
+  
+  menuNavAnimation();
+  clearScreen();
 
+  fname.style.visibility = "hidden";
+  lname.style.visibility = "hidden";
+  back.style.visibility = "hidden";
+  create.style.visibility = "hidden";
   mainDiv.style.display = "block";
   menuNavDiv.style.display = "block";
-  
-  document.getElementById("NameLabel").innerHTML = `Username: ${currentUser}`;
+
+  sideBarCtx.fillRect(0, 0, canvas.width, canvas.height);
+  document.getElementById("NameLabel").innerHTML = `Welcome back: ${currentUser}`;
 }
 
 function Connect(){
@@ -88,9 +114,10 @@ function login() {
   passInput = document.getElementById("pass").value;
   socket.emit("loginRequest", userInput, passInput);
   
-  socket.on("loginResponse", function(response){
+  socket.on("loginResponse", function(response, fname){
     if (response == "success") {
-      currentUser = userInput;
+      currentUserID = userInput;
+      currentUser = fname;
       document.getElementById("alreadyTakenUser").style.visibility = "hidden";
       document.getElementById("invalidPass").style.visibility = "hidden";
       loggedIn();
@@ -100,14 +127,46 @@ function login() {
   }) 
 }
 
+function signupRedirect() {
+  let fname = document.getElementById("fname");
+  let lname = document.getElementById("lname");
+  let logon = document.getElementById("logon");
+  let signup = document.getElementById("signup");
+  let create = document.getElementById("create");
+  let back = document.getElementById("back");
+  fname.style.visibility = "visible";
+  lname.style.visibility = "visible";
+  logon.style.visibility = "hidden";
+  signup.style.visibility = "hidden";
+  create.style.visibility = "visible";
+  back.style.visibility = "visible";
+}
+
+function loginRedirect() {
+  let fname = document.getElementById("fname");
+  let lname = document.getElementById("lname");
+  let logon = document.getElementById("logon");
+  let signup = document.getElementById("signup");
+  let create = document.getElementById("create");
+  let back = document.getElementById("back");
+  fname.style.visibility = "hidden";
+  lname.style.visibility = "hidden";
+  logon.style.visibility = "visible";
+  signup.style.visibility = "visible";
+  create.style.visibility = "hidden";
+  back.style.visibility = "hidden";
+}
+
 function signup() {
   userInput = document.getElementById("user").value;
   passInput = document.getElementById("pass").value;
-  socket.emit("signupRequest", userInput, passInput);
+  fnameInput = document.getElementById("fname").value;
+  lnameInput = document.getElementById("lname").value;
+  socket.emit("signupRequest", userInput, passInput, fnameInput, lnameInput);
   
   socket.on("signupResponse", function(response){
     if (response == "success") {
-      currentUser = userInput;
+      currentUser = fnameInput;
       document.getElementById("alreadyTakenUser").style.visibility = "hidden";
       document.getElementById("invalidPass").style.visibility = "hidden";
       loggedIn();
@@ -119,15 +178,19 @@ function signup() {
 
 function logout() {
   clearScreen();
+  
   menuNavDiv.style.display = "none";
   socket.emit("logout", currentUser);
   currentUser = null;
   document.getElementById("NameLabel").innerHTML = currentUser;
+  
   loginDiv.style.display = "block";
+  document.getElementById("logon").style.visibility = "visible";
+  document.getElementById("signup").style.visibility = "visible";
 }
 
 function deleteAccount() {
-  socket.emit("deleteAccount", currentUser);
+  socket.emit("deleteAccount", currentUserID);
   socket.on("deleteAccountResponse", function(response) {
     if (response == "success") {
       logout();

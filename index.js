@@ -55,34 +55,33 @@ io.on('connection', function(socket){
 
   //todo: shrink down somehow
   socket.on("loginRequest", function(user, pass) {
-    userDB.all("SELECT DISTINCT Username username FROM users ORDER BY username", [], (err, rows) => {
+    userDB.all("SELECT DISTINCT Username username FROM users ORDER BY username", [], (err, rowsuser) => {
       if (err) {
         throw err;
       }
-      for (let i = 0; i < rows.length; i++) {
-        if (rows[i].username == user) {
-          userDB.all("SELECT Password password FROM users WHERE username = ?", [user], (err, rows) => {
+      for (let i = 0; i < rowsuser.length; i++) {
+        if (rowsuser[i].username == user) {
+          userDB.all("SELECT Password password FROM users WHERE username = ?", [user], (err, rowspasswd) => {
             if (err) {
               throw err;
             }
-            for (let i = 0; i < rows.length; i++) {
-              if (rows[i].password == pass) {
-                socket.emit("loginResponse", "success");
-                break;
-              } else {
-                socket.emit("loginResponse", "failure");
+            for (let i = 0; i < rowspasswd.length; i++) {
+              if (rowspasswd[i].password == pass) {
+                userDB.all("SELECT Firstname firstname FROM users WHERE username = ?", [user], (err, rowsfname) => {
+                  return socket.emit("loginResponse", "success", rowsfname[0].fname);
+                });
               }
             }
+            return socket.emit("loginResponse", "badpassword", null);
           });
-        } else {
-          socket.emit("loginResponse", "failure");
         }
       }
-    })
+      return socket.emit("loginResponse", "failure", null);
+    });
   })
 
   //todo: shrink down somehow
-  socket.on("signupRequest", function(user, pass) {
+  socket.on("signupRequest", function(user, pass, fname, lname) {
     console.log("recieved signupRequest");
     userDB.all("SELECT DISTINCT Username username FROM users ORDER BY username", [], (err, rows) => {
       if (err) {
@@ -91,18 +90,16 @@ io.on('connection', function(socket){
       for (let i = 0; i < rows.length; i++) {
         if (rows[i].username == user) {
           console.log("user %s already exists", user);
-          socket.emit("signupResponse", "failure");
-          break;
-        } else {
-          console.log("does not exist, creating user %s", user);
-          userDB.all("INSERT INTO users (username, password) VALUES (?, ?)", [user, pass], (err) => {
-            if (err) {
-              throw err;
-            }
-            socket.emit("signupResponse", "success");
-          });
+          return socket.emit("signupResponse", "failure");
         }
       }
+      console.log("does not exist, creating user %s", user);
+      userDB.all("INSERT INTO users (username, password, firstname, lastname) VALUES (?, ?, ?, ?)", [user, pass, fname, lname], (err) => {
+        if (err) {
+          throw err;
+        }
+        return socket.emit("signupResponse", "success");
+      });
     })
   })
 
@@ -113,12 +110,15 @@ io.on('connection', function(socket){
   });
 
   socket.on("deleteAccount", function(user) {
-    userDB.all("DELETE FROM users WHERE username = ?", [user], (err) => {
-      if (err) {
-        throw err;
-      }
-      socket.emit("deleteAccountResponse", "success");
+    userDB.serialize(function () {
+      userDB.run("DELETE FROM users WHERE username = ?", [user], (err) => {
+        if (err) {
+          throw err;
+        }
+        socket.emit("deleteAccountResponse", "success");
+      });
     });
+    
   });
 
   socket.on("changeUsernameRequest", function(currentUsername, newUsername) {

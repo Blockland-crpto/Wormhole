@@ -22,6 +22,7 @@
     
     <div id = "Main">
       <div id = "AccessPort">
+        <canvas id = "sideBar"></canvas>
         <label id = "NameLabel"> Username: </label>
         <br>
       </div>
@@ -59,10 +60,14 @@
       <h1 class = "Title">Welcome to wormhole!</h1>
       <input id = "user" type = "text" placeholder = "Username">
       <input id = "pass" type = "password" placeholder = "Password">
+      <input id = "fname" type = "text" placeholder = "First Name">
+      <input id = "lname" type = "text" placeholder = "Last Name">
       <p id = "invalidPass">Invalid password or username</p>
       <p id = "alreadyTakenUser">Username already exists, Login instead</p>
       <button id = "logon" onclick = "login()">Login</button>
-      <button id = "signup" onclick = "signup()">Not a User? Signup!</button>
+      <button id = "signup" onclick = "signupRedirect()">Not a User? Signup!</button>
+      <button id = "create" onclick = "signup()"> Signup </button>
+      <button id = "back" onclick = "loginRedirect()"> Have a account? Login instead </button>
     </div> 
 
     <div id = "Settings">

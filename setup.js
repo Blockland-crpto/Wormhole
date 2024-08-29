@@ -21,13 +21,13 @@ function setupDB() {
   });
 
   db.serialize(function() {
-    db.run("CREATE TABLE IF NOT EXISTS users (username TEXT, password TEXT)", (err) => {
+    db.run("CREATE TABLE IF NOT EXISTS users (username TEXT, password TEXT, firstname TEXT, lastname TEXT)", (err) => {
       if (err) {
         throw err;
       }
     });
 
-    db.run("INSERT INTO users (username, password) VALUES ('admin', 'admin')", (err) => {
+    db.run("INSERT INTO users (username, password, firstname, lastname) VALUES ('admin', 'admin', 'Alexander', 'Herbert')", (err) => {
       if (err) {
         throw err;
       }
