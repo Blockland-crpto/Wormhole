@@ -21,6 +21,13 @@ input {
   color: #979595;
 }
 
+.topNav {
+  position: absolute;
+  top: 0;
+  height: 50px;
+  width: 60px;
+}
+
 #Chat {
   background: #949494;
   border-radius: 1%;
@@ -30,39 +37,24 @@ input {
   top: 100%;
 }
 
-#NameLabel {
-  position: absolute;
-  left: 3%;
-  top: 15%;
-  color: #d4d4d4;
-}
-
-.topNav {
-  position: absolute;
-  top: 0;
-  height: 50px;
-  width: 60px;
-  
-}
-
 #logo {
   left: 0%; 
 }
 
 #homeButn0 {
-  left: 15%;
+  left: 20%;
 }
 
 #homeButn1 {
-  left: 35%;
+  left: 40%;
 }
 
 #homeButn2 {
-  left: 55%;
+  left: 60%;
 }
 
 #homeButn3 {
-  left: 75%;
+  left: 80%;
 }
 
 #topbar {
@@ -77,14 +69,38 @@ input {
   top: 0px;
   height: 100%;
   left: 0px;
-  width: 15%;
+  width: 90px;
+}
+
+#NameLabel {
+  position: absolute;
+  top: 15%;
+  left: 10px;
+  color: #d4d4d4;
+}
+
+#RecentGroup {
+  position: absolute;
+  left: 10px;
+  top: 35%;
+  color: #d4d4d4;
+}
+
+
+#nameLabelBox {
+  position: absolute;
+  left: 0px;
+  top: 34%;
+  height: 90px;
+  width: 90px;
+  border-radius: 25%;
 }
 
 .Title {
   font-size: 300%;
   font-family: 'Segoe UI';
   background: #1e5a80;
-  border-radius: 5%
+  border-radius: 5%;
 }
 
 button {

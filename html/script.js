@@ -1,3 +1,9 @@
+//Main things i HAVE to do:
+//1. cut down on variables
+//2. shrink function sizes
+//3. reduce repition in code
+//4. make the code more readable
+
 var socket;
 var usernameInput
 var chatIDInput;
@@ -8,6 +14,7 @@ var messages = [];
 var delay = true;
 var currentUser;
 var currentUserID;
+var lastJoinedGroup;
 
 let mainDiv;
 let chatDiv;
@@ -68,11 +75,14 @@ function menuNavAnimation() {
 function loggedIn() {
   const fname = document.getElementById("fname");
   const lname = document.getElementById("lname");
+  const recentGroup = document.getElementById("RecentGroup");
   const create = document.getElementById("create");
   const back = document.getElementById("back");
   const sideBar = document.getElementById("sideBar");
   const sideBarCtx = sideBar.getContext("2d"); 
-
+  const nameLabelBox = document.getElementById("nameLabelBox");
+  const nameLabelBoxCtx = nameLabelBox.getContext("2d");
+  
   chatIDInput = document.getElementById("IDInput");
   messageInput = document.getElementById("ComposedMessage");
   chatRoom = document.getElementById("RoomID");
@@ -88,12 +98,21 @@ function loggedIn() {
   mainDiv.style.display = "block";
   menuNavDiv.style.display = "block";
 
-  sideBarCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+  sideBarCtx.fillStyle = "black";
+  nameLabelBoxCtx.fillStyle = "#757575";
+
+  sideBarCtx.fillRect(0, 0, sideBar.width, sideBar.height);
+  nameLabelBoxCtx.fillRect(0, 0, nameLabelBox.width, nameLabelBox.height);
+
+  
   document.getElementById("NameLabel").innerHTML = `Welcome back: ${currentUser}`;
+  recentGroup.innerHTML = `Recent Group: ${lastJoinedGroup}`;
 }
 
 function Connect(){
   socket.emit("join", chatIDInput.value, currentUser);
+  lastJoinedGroup = chatIDInput.value;
 }
 
 function Send(){
@@ -114,10 +133,11 @@ function login() {
   passInput = document.getElementById("pass").value;
   socket.emit("loginRequest", userInput, passInput);
   
-  socket.on("loginResponse", function(response, fname){
+  socket.on("loginResponse", function(response, fname, lastchatroom){
     if (response == "success") {
       currentUserID = userInput;
       currentUser = fname;
+      lastJoinedGroup = lastchatroom;
       document.getElementById("alreadyTakenUser").style.visibility = "hidden";
       document.getElementById("invalidPass").style.visibility = "hidden";
       loggedIn();

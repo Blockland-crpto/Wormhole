@@ -1,4 +1,5 @@
 db/
+logs/
 .upm
 node_modules
 .git
@@ -7,3 +8,4 @@ node_modules
 replit.nix
 .breakpoints
 *.png
+*.log

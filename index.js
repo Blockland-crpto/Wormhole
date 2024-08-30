@@ -4,6 +4,7 @@ const socketio = require("socket.io");
 const path = require("path");
 const sqlite3 = require("sqlite3");
 const helmet = require("helmet");
+const process = require("process");
 
 const app = express();
 app.use(helmet());
@@ -12,6 +13,7 @@ const httpserver = http.Server(app);
 const io = socketio(httpserver);
 
 const gamedirectory = path.join(__dirname, "html");
+
 
 
 // the setup program by default creates this database
@@ -40,6 +42,14 @@ io.on('connection', function(socket){
       io.in(room).emit("recieve", "Server : " + username + " has entered the chat.");
       socket.emit("join", room);
       console.log("a user joined the room");
+      userDB.serialize(function () {
+        userDB.run("UPDATE users SET lastchatroom = ? WHERE username = ?", [room, username], (err) =>{
+          if (err) {
+            throw err;
+          }
+        });
+      });
+      
     }
   })
 
@@ -55,28 +65,21 @@ io.on('connection', function(socket){
 
   //todo: shrink down somehow
   socket.on("loginRequest", function(user, pass) {
-    userDB.all("SELECT DISTINCT Username username FROM users ORDER BY username", [], (err, rowsuser) => {
+    userDB.get("SELECT Username username, Password password, Firstname firstname, Lastchatroom lastchatroom FROM users WHERE Username = ?", [user], (err, rowuser) => {
       if (err) {
         throw err;
       }
-      for (let i = 0; i < rowsuser.length; i++) {
-        if (rowsuser[i].username == user) {
-          userDB.all("SELECT Password password FROM users WHERE username = ?", [user], (err, rowspasswd) => {
-            if (err) {
-              throw err;
-            }
-            for (let i = 0; i < rowspasswd.length; i++) {
-              if (rowspasswd[i].password == pass) {
-                userDB.all("SELECT Firstname firstname FROM users WHERE username = ?", [user], (err, rowsfname) => {
-                  return socket.emit("loginResponse", "success", rowsfname[0].fname);
-                });
-              }
-            }
-            return socket.emit("loginResponse", "badpassword", null);
-          });
+      if (rowuser === undefined) {
+        return socket.emit("loginResponse", "failure", null, null);
+      }
+      if (rowuser.username == user) {
+        if (rowuser.password == pass) {
+          return socket.emit("loginResponse", "success", rowuser.firstname, rowuser.lastchatroom);
+        } else {
+          return socket.emit("loginResponse", "badpassword", null, null);
         }
       }
-      return socket.emit("loginResponse", "failure", null);
+      
     });
   })
 
@@ -94,7 +97,7 @@ io.on('connection', function(socket){
         }
       }
       console.log("does not exist, creating user %s", user);
-      userDB.all("INSERT INTO users (username, password, firstname, lastname) VALUES (?, ?, ?, ?)", [user, pass, fname, lname], (err) => {
+      userDB.run("INSERT INTO users (username, password, firstname, lastname, lastchatroom) VALUES (?, ?, ?, ?, ?)", [user, pass, fname, lname, "None"], (err) => {
         if (err) {
           throw err;
         }
@@ -173,4 +176,9 @@ io.on('connection', function(socket){
       
     });
   });
+});
+
+process.on('beforeExit', (code) => {
+  //we want to dump the resource information
+  
 });
