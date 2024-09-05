@@ -4,82 +4,58 @@
 //3. reduce repition in code
 //4. make the code more readable
 
-var socket;
-var usernameInput
-var chatIDInput;
-var messageInput;
-var chatRoom;
-var dingSound;
-var messages = [];
-var delay = true;
-var currentUser;
-var currentUserID;
-var lastJoinedGroup;
-
-let mainDiv;
-let chatDiv;
-let loginDiv;
-let settingsDiv;
-let deleteAccountConfirmDiv;
-let changeUsernamePromptDiv;
-let changePasswordPromptDiv;
-let menuNavDiv;
-let aboutDiv;
+let delay = true;
+let socket;
+let usernameInput;
+let chatIDInput;
+let messageInput;
+let chatRoom;
+let dingSound;
+let messages = [];
+let currentUser;
+let currentUserID;
+let lastJoinedGroup;
 
 
 function onload(){
-  const fname = document.getElementById("fname");
-  const lname = document.getElementById("lname");
-  const create = document.getElementById("create");
-  const back = document.getElementById("back");
-  
-  mainDiv = document.getElementById("Main");
-  chatDiv = document.getElementById("Chat");
-  loginDiv = document.getElementById("Login");
-  settingsDiv = document.getElementById("Settings");
-  menuNavDiv = document.getElementById("menuNavBar");
-  invalidPasswd = document.getElementById("invalidPass");
-  alreadyTakenUser = document.getElementById("alreadyTakenUser");
-  deleteAccountConfirmDiv = document.getElementById("deleteConfirmation");
-  changeUsernamePromptDiv = document.getElementById("changeUsernamePrompt");
-  changePasswordPromptDiv = document.getElementById("changePasswordPrompt");
-  aboutDiv = document.getElementById("About");
-  
-  mainDiv.style.display = "none";
-  chatDiv.style.display = "none";
-  menuNavDiv.style.display = "none";
-  settingsDiv.style.display = "none";
-  deleteAccountConfirmDiv.style.display = "none";
-  changeUsernamePromptDiv.style.display = "none";
-  changePasswordPromptDiv.style.display = "none";
-  aboutDiv.style.display = "none";
-  
-  fname.style.visibility = "hidden";
-  lname.style.visibility = "hidden";
-  invalidPasswd.style.visibility = "hidden";
-  alreadyTakenUser.style.visibility = "hidden";
-  create.style.visibility = "hidden";
-  back.style.visibility = "hidden";
-  
+  document.getElementById("Main").style.display = "none";
+  document.getElementById("Chat").style.display = "none";
+  document.getElementById("About").style.display = "none";
+  document.getElementById("sideBar").style.display = "none";
+  document.getElementById("Settings").style.display = "none";
+  document.getElementById("menuNavBar").style.display = "none";
+  document.getElementById("deleteConfirmation").style.display = "none";
+  document.getElementById("changeUsernamePrompt").style.display = "none";
+  document.getElementById("changePasswordPrompt").style.display = "none";
+
+  document.getElementById("back").style.visibility = "hidden";
+  document.getElementById("fname").style.visibility = "hidden";
+  document.getElementById("lname").style.visibility = "hidden";
+  document.getElementById("create").style.visibility = "hidden";
+  document.getElementById("invalidPass").style.visibility = "hidden";
+  document.getElementById("alreadyTakenUser").style.visibility = "hidden";
+    
   socket = io();
 }
 
 function menuNavAnimation() {
-  const canvas = document.getElementById("topbar");
-  const ctx = canvas.getContext("2d");
+  const topBar = document.getElementById("topbar");
+  const topBarCtx = topBar.getContext("2d");
 
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  
+  topBarCtx.fillStyle = "black";
+  topBarCtx.fillRect(0, 0, topBar.width, topBar.height);
+}
+
+function sideNavAnimation() {
+  const sideBar = document.getElementById("sideBar");
+  const sideBarCtx = sideBar.getContext("2d");
+
+  sideBarCtx.fillStyle = "black";
+  sideBarCtx.fillRect(0, 0, sideBar.width, sideBar.height);
+  sideBar.style.display = "block";
 }
 
 function loggedIn() {
-  const fname = document.getElementById("fname");
-  const lname = document.getElementById("lname");
-  const recentGroup = document.getElementById("RecentGroup");
-  const create = document.getElementById("create");
-  const back = document.getElementById("back");
-  const sideBar = document.getElementById("sideBar");
-  const sideBarCtx = sideBar.getContext("2d"); 
   const nameLabelBox = document.getElementById("nameLabelBox");
   const nameLabelBoxCtx = nameLabelBox.getContext("2d");
   
@@ -87,27 +63,24 @@ function loggedIn() {
   messageInput = document.getElementById("ComposedMessage");
   chatRoom = document.getElementById("RoomID");
   dingSound = document.getElementById("Ding");
-  
-  menuNavAnimation();
+
   clearScreen();
+  menuNavAnimation();
+  sideNavAnimation()
+  
 
-  fname.style.visibility = "hidden";
-  lname.style.visibility = "hidden";
-  back.style.visibility = "hidden";
-  create.style.visibility = "hidden";
-  mainDiv.style.display = "block";
-  menuNavDiv.style.display = "block";
-
-
-  sideBarCtx.fillStyle = "black";
+  document.getElementById("fname").style.visibility = "hidden";
+  document.getElementById("lname").style.visibility = "hidden";
+  document.getElementById("back").style.visibility = "hidden";
+  document.getElementById("create").style.visibility = "hidden";
+  document.getElementById("Main").style.display = "block";
+  document.getElementById("menuNavBar").style.display = "block";
+  
   nameLabelBoxCtx.fillStyle = "#757575";
-
-  sideBarCtx.fillRect(0, 0, sideBar.width, sideBar.height);
   nameLabelBoxCtx.fillRect(0, 0, nameLabelBox.width, nameLabelBox.height);
 
-  
   document.getElementById("NameLabel").innerHTML = `Welcome back: ${currentUser}`;
-  recentGroup.innerHTML = `Recent Group: ${lastJoinedGroup}`;
+  document.getElementById("RecentGroup").innerHTML = `Recent Group: ${lastJoinedGroup}`;
 }
 
 function Connect(){
@@ -128,83 +101,84 @@ function delayReset(){
   delay = true;
 }
 
+
+/* Redirects Start */
+
+function signupRedirect() {
+  document.getElementById("fname").style.visibility = "visible";
+  document.getElementById("lname").style.visibility = "visible";
+  document.getElementById("logon").style.visibility = "hidden";
+  document.getElementById("signup").style.visibility = "hidden";
+  document.getElementById("create").style.visibility = "visible";
+  document.getElementById("back").style.visibility = "visible";
+}
+
+function loginRedirect() {
+  document.getElementById("fname").style.visibility = "hidden";
+  document.getElementById("lname").style.visibility = "hidden";
+  document.getElementById("logon").style.visibility = "visible";
+  document.getElementById("signup").style.visibility = "visible";
+  document.getElementById("create").style.visibility = "hidden";
+  document.getElementById("back").style.visibility = "hidden";
+}
+
+/* Redirects End */
+
+/* Login Screen Start */
+
 function login() {
-  userInput = document.getElementById("user").value;
-  passInput = document.getElementById("pass").value;
+  const userInput = document.getElementById("user").value;
+  const passInput = document.getElementById("pass").value;
+  const invalidPasswd = document.getElementById("invalidPass");
+
   socket.emit("loginRequest", userInput, passInput);
-  
+
   socket.on("loginResponse", function(response, fname, lastchatroom){
     if (response == "success") {
       currentUserID = userInput;
       currentUser = fname;
       lastJoinedGroup = lastchatroom;
       document.getElementById("alreadyTakenUser").style.visibility = "hidden";
-      document.getElementById("invalidPass").style.visibility = "hidden";
+      invalidPasswd.style.visibility = "hidden";
       loggedIn();
     } else {
-      document.getElementById("invalidPass").style.visibility = "visible";
+      invalidPasswd.style.visibility = "visible";
     }
   }) 
 }
 
-function signupRedirect() {
-  let fname = document.getElementById("fname");
-  let lname = document.getElementById("lname");
-  let logon = document.getElementById("logon");
-  let signup = document.getElementById("signup");
-  let create = document.getElementById("create");
-  let back = document.getElementById("back");
-  fname.style.visibility = "visible";
-  lname.style.visibility = "visible";
-  logon.style.visibility = "hidden";
-  signup.style.visibility = "hidden";
-  create.style.visibility = "visible";
-  back.style.visibility = "visible";
-}
-
-function loginRedirect() {
-  let fname = document.getElementById("fname");
-  let lname = document.getElementById("lname");
-  let logon = document.getElementById("logon");
-  let signup = document.getElementById("signup");
-  let create = document.getElementById("create");
-  let back = document.getElementById("back");
-  fname.style.visibility = "hidden";
-  lname.style.visibility = "hidden";
-  logon.style.visibility = "visible";
-  signup.style.visibility = "visible";
-  create.style.visibility = "hidden";
-  back.style.visibility = "hidden";
-}
-
 function signup() {
-  userInput = document.getElementById("user").value;
-  passInput = document.getElementById("pass").value;
-  fnameInput = document.getElementById("fname").value;
-  lnameInput = document.getElementById("lname").value;
+  const userInput = document.getElementById("user").value;
+  const passInput = document.getElementById("pass").value;
+  const fnameInput = document.getElementById("fname").value;
+  const lnameInput = document.getElementById("lname").value;
+  const alreadyTakenUser = document.getElementById("alreadyTakenUser");
+  
   socket.emit("signupRequest", userInput, passInput, fnameInput, lnameInput);
   
   socket.on("signupResponse", function(response){
     if (response == "success") {
       currentUser = fnameInput;
-      document.getElementById("alreadyTakenUser").style.visibility = "hidden";
+      alreadyTakenUser.style.visibility = "hidden";
       document.getElementById("invalidPass").style.visibility = "hidden";
       loggedIn();
     } else {
-      document.getElementById("alreadyTakenUser").style.visibility = "visible";
+      alreadyTakenUser.style.visibility = "visible";
     }
   })
 }
 
+/* Login Screen End */
+
 function logout() {
   clearScreen();
-  
-  menuNavDiv.style.display = "none";
-  socket.emit("logout", currentUser);
-  currentUser = null;
+  document.getElementById("menuNavBar").style.display = "none";
+  socket.emit("logout", currentUser, lastJoinedGroup);
   document.getElementById("NameLabel").innerHTML = currentUser;
+
+  currentUser = null;
   
-  loginDiv.style.display = "block";
+  document.getElementById("Login").style.display = "block";
   document.getElementById("logon").style.visibility = "visible";
   document.getElementById("signup").style.visibility = "visible";
 }
@@ -221,53 +195,126 @@ function deleteAccount() {
 }
 
 function settings() {
-  menuNavAnimation();
-  clearScreen();
+  const settingsDiv = document.getElementById("Settings");
+  const sb0 = document.getElementById("settingsButn0");
+  const sb1 = document.getElementById("settingsButn1");
+  const sb2 = document.getElementById("settingsButn2");
+  const sb3 = document.getElementById("settingsButn3");
+  
+  const settingsText0 = document.getElementById("settingsText0");
+  const settingsText1 = document.getElementById("settingsText1");
+  const settingsText2 = document.getElementById("settingsText2");
+  const settingsText3 = document.getElementById("settingsText3");
+  const settingsText4 = document.getElementById("settingsText4");
+  
   const keyframeSetup = [[
-    { transform: "translateX(200px)" }, // keyframe
+    { transform: "translateX(-80px)" }, // keyframe
     { transform: "translateX(0px)" }, // keyframe
   ], [
-    { transform: "translateX(210px)" }, // keyframe
+    { transform: "translateX(-90px)" }, // keyframe
     { transform: "translateX(0px)" }, // keyframe
   ], [
-    { transform: "translateX(220px)" }, // keyframe
+    { transform: "translateX(-100px)" }, // keyframe
     { transform: "translateX(0px)" }, // keyframe
   ], [
-    { transform: "translateX(230px)" }, // keyframe
+    { transform: "translateX(-110px)" }, // keyframe
     { transform: "translateX(0px)" }, // keyframe
   ], [
-    { transform: "translateX(240px)" }, // keyframe
+    { transform: "translateX(-120px)" }, // keyframe
     { transform: "translateX(0px)" }, // keyframe
   ]];
   
+  const settingsCanvas = document.getElementById("settingsCanvas");
+  const settingsCanvasCtx = settingsCanvas.getContext("2d"); 
+  
+  clearScreen();
+  menuNavAnimation();
+  sideNavAnimation();
+  
+  settingsText0.style.display = "none";
+  settingsText1.style.display = "none";
+  settingsText2.style.display = "none";
+  settingsText3.style.display = "none";
+  settingsText4.style.display = "none";
+  settingsCanvas.style.display = "none";
+  
   settingsDiv.style.display = "block";
+  
+  settingsCanvasCtx.fillStyle = "black";
+  
+  settingsCanvasCtx.fillRect(0, 0, 400, 200);
   
   for (let i = 0; i < 5; i++) {
     const rollInKeyframe = new KeyframeEffect(
       document.getElementById(`settingsButn${i}`), 
       keyframeSetup[i], 
-      { duration: 2000 + 100 * i, 
+      { duration: 1400 + 100 * i, 
        direction: "alternate", 
        easing: "ease-in-out",
        iterations: "1"});
     const rollInAnimation = new Animation(rollInKeyframe);
     rollInAnimation.play();
-  }
+  } 
+
+  sb0.addEventListener("mouseover", (event) => {
+    settingsText0.style.display = "block";
+    fadeInElement(settingsCanvas);
+  });
+
+  sb0.addEventListener("mouseleave", (event) => {
+    settingsText0.style.display = "none";
+    settingsCanvas.style.display = "none";
+  });
+
+  sb1.addEventListener("mouseover", (event) => {
+    settingsText1.style.display = "block";
+    fadeInElement(settingsCanvas);
+  });
+
+  sb1.addEventListener("mouseleave", (event) => {
+    settingsText1.style.display = "none";
+    settingsCanvas.style.display = "none";
+  });
+
+  sb2.addEventListener("mouseover", (event) => {
+    settingsText2.style.display = "block";
+    fadeInElement(settingsCanvas);
+  });
+
+  sb2.addEventListener("mouseleave", (event) => {
+    settingsText2.style.display = "none";
+    settingsCanvas.style.display = "none";
+  });
+
+  sb3.addEventListener("mouseover", (event) => {
+    settingsText3.style.display = "block";
+    settingsText4.style.display = "block";
+    fadeInElement(settingsCanvas);
+  });
+
+  sb3.addEventListener("mouseleave", (event) => {
+    settingsText3.style.display = "none";
+    settingsText4.style.display = "none";
+    settingsCanvas.style.display = "none";
+  });
 }
 
 function deletePrompt() {
   clearScreen();
-  deleteAccountConfirmDiv.style.display = "block";
+  document.getElementById("deleteConfirmation").style.display = "block";
 }
 
 function changeUsernamePrompt() {
-  settingsDiv.style.display = "none";
-  changeUsernamePromptDiv.style.display = "block";
+  clearScreen();
+  document.getElementById("Settings").style.display = "none";
+  document.getElementById("changeUsernamePrompt").style.display = "block";
 }
 
 function changeUsername() {
-  settingsDiv.style.display = "none";
-  newUsername = document.getElementById("newUsername").value;
+  const newUsername = document.getElementById("newUsername").value;
+  
+  document.getElementById("Settings").style.display = "none";
+  
   socket.emit("changeUsernameRequest", currentUser, newUsername);
   socket.on("changeUsernameResponse", function(responce) {
     if (responce == "success") {
@@ -279,30 +326,34 @@ function changeUsername() {
 }
 
 function changePasswordPrompt() {
-  settingsDiv.style.display = "none";
-  changePasswordPromptDiv.style.display = "block";
+  clearScreen();
+  document.getElementById("Settings").style.display = "none";
+  document.getElementById("changePasswordPrompt").style.display = "block";
 }
 
 function changePassword() {
-  settingsDiv.style.display = "none";
-  oldPassword = document.getElementById("oldPassword").value;
-  newPassword = document.getElementById("newPassword").value;
+  const oldPassword = document.getElementById("oldPassword").value;
+  const newPassword = document.getElementById("newPassword").value;
+  
+  document.getElementById("Settings").style.display = "none";
+  
   socket.emit("changePasswordRequest", oldPassword, newPassword, currentUser);
+  
   socket.on("changePasswordResponse", function(responce) {
     if (responce == "success") {
       console.log("changed")
       loggedIn();
     } else if (responce == "badpassword") {
       console.log("bad password");
-      
     }
-  })
+  });
 }
 
 function chat() {
   menuNavAnimation();
   clearScreen();
-  chatDiv.style.display = "block";
+  
+  document.getElementById("Chat").style.display = "block";
   
   socket.on("join", function(room){
     chatRoom.innerHTML = "Chatroom : " + room;
@@ -326,18 +377,53 @@ function chat() {
 }
 
 function clearScreen() {
-  mainDiv.style.display = "none";
-  chatDiv.style.display = "none";
-  loginDiv.style.display = "none";
-  settingsDiv.style.display = "none";
-  deleteAccountConfirmDiv.style.display = "none";
-  changeUsernamePromptDiv.style.display = "none";
-  changePasswordPromptDiv.style.display = "none";
-  aboutDiv.style.display = "none";
+  document.getElementById("Main").style.display = "none";
+  document.getElementById("Chat").style.display = "none";
+  document.getElementById("Login").style.display = "none";
+  document.getElementById("Settings").style.display = "none";
+  document.getElementById("deleteConfirmation").style.display = "none";
+  document.getElementById("changeUsernamePrompt").style.display = "none";
+  document.getElementById("changePasswordPrompt").style.display = "none";
+  document.getElementById("About").style.display = "none";
+  document.getElementById("sideBar").style.display = "none";
 }
 
 function about() {
   menuNavAnimation();
   clearScreen();
-  aboutDiv.style.display = "block";
+  document.getElementById("About").style.display = "block";
+}
+
+function fadeInElement(element) {
+  let op = 0.1;
+
+  element.style.display = "block";
+  element.style.opacity = op;
+
+  const timer = setInterval(function() {
+    if (op >= 1) {
+      clearInterval(timer);
+    }
+
+    element.style.opacity = op;
+    element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+    op += op * 0.1;
+  }, 10);
+  
+}
+
+function fadeOutElement(element) {
+  let op = 1;
+
+  element.style.opacity = op;
+
+  const timer = setInterval(function() {
+    if (op <= 0.1) {
+      clearInterval(timer);
+    }
+
+    element.style.opacity = op;
+    element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+    op -= op * 0.1;
+  }, 10);
 }

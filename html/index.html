@@ -6,12 +6,13 @@
     <meta name = "viewport" content = "width=device-width">
     <link rel = "stylesheet" type = "text/css" href = "style.css">
     <script src = "script.js"></script>
-    <script src= "socket.io/socket.io.js"></script>
+    <script src = "socket.io/socket.io.js"></script>
   </head>
   <body onload = "onload()">
     <!-- various diffrent screen through out the website -->
     <div id = "menuNavBar">
       <canvas id = "topbar"></canvas>
+      <canvas id = "sideBar"></canvas>
       <img id = "logo" class = "topNav" src = "icon.png">
       <button id = "homeButn0" class = "topNav" onclick = "loggedIn()"> Home </button> 
       <button id = "homeButn1" class = "topNav" onclick = "settings()"> Settings </button>
@@ -72,16 +73,22 @@
     </div> 
 
     <div id = "Settings">
-      <p id = "welcomeName">Welcome back!</p>
-      <button id = "settingsButn0" onclick = "logout()">Logout of Account</button>
+      <!--<p id = "welcomeName">Welcome back!</p> -->
+      <canvas id = "settingsCanvas"></canvas>
+      <button id = "settingsButn0" onclick = "logout()" class = "settingsSideBar">Logout of Account</button>
       <br>
-      <button id = "settingsButn1" onclick = "changeUsernamePrompt()">Change Username</button>
+      <button id = "settingsButn1" onclick = "changeUsernamePrompt()" class = "settingsSideBar">Change Username</button>
       <br>
-      <button id = "settingsButn2" onclick = "changePasswordPrompt()">Change Password</button>
+      <button id = "settingsButn2" onclick = "changePasswordPrompt()" class = "settingsSideBar">Change Password</button>
       <br>
-      <button id = "settingsButn3" onclick = "deletePrompt()">Delete Account</button>
+      <button id = "settingsButn3" onclick = "deletePrompt()" class = "settingsSideBar">Delete Account</button>
       <br>
-      <button id = "settingsButn4" onclick = "loggedIn()">Back</button>
+      <button id = "settingsButn4" onclick = "loggedIn()" class = "settingsSideBar">Back</button>
+      <p id = "settingsText0" class = "settingsAbout">Securly Logout of your account</p>
+      <p id = "settingsText1" class = "settingsAbout">Change your account username</p>
+      <p id = "settingsText2" class = "settingsAbout">Change your account password</p>
+      <p id = "settingsText3" class = "settingsAbout">Delete your account:</p>
+      <p id = "settingsText4" class = "settingsAbout">No data will stay on HerberTech Servers</p>
     </div>
 
     <div id = "deleteConfirmation">
@@ -113,4 +120,5 @@
     </div>
     
   </body>
+  
 </html>

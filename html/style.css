@@ -19,18 +19,62 @@ input {
 
 .Message {
   color: #979595;
+  left: 40%;
 }
+
+/* Settings begin */
+.settingsSideBar {
+  position: absolute;
+  left: 2%;
+  height: 60px;
+  width: 75px;
+}
+
+.settingsAbout {
+  position:absolute;
+  left: 22%;
+  top: 20%;
+  align-content: center;
+  color: #919191;
+}
+
+#settingsButn0 {
+  top: 17%; 
+}
+
+#settingsButn1 {
+  top: 32%; 
+}
+
+#settingsButn2 {
+  top: 47%; 
+}
+
+#settingsButn3 {
+  top: 62%; 
+}
+
+#settingsButn4 {
+  top: 77%;
+}
+
+#settingsCanvas {
+  position: absolute;
+  left: 22%;
+  top: 20%;
+}
+
+#settingsText4 {
+  top: 24%;
+}
+
+/* Settings end */
 
 .topNav {
   position: absolute;
   top: 0;
   height: 50px;
   width: 60px;
-}
-
-#Chat {
-  background: #949494;
-  border-radius: 1%;
 }
 
 #BackButton {
@@ -69,7 +113,7 @@ input {
   top: 0px;
   height: 100%;
   left: 0px;
-  width: 90px;
+  width: 105px;
 }
 
 #NameLabel {
@@ -85,7 +129,6 @@ input {
   top: 35%;
   color: #d4d4d4;
 }
-
 
 #nameLabelBox {
   position: absolute;
@@ -103,6 +146,7 @@ input {
   border-radius: 5%;
 }
 
+
 button {
   color: #000000;
   background: #00849e;
@@ -113,4 +157,12 @@ button {
 
 button:hover {
   background-color: #e3e3e3;
+}
+
+
+/* Chatroom */
+
+#Chat {
+  background: #949494;
+  border-radius: 1%;
 }
