@@ -25,8 +25,10 @@
       <div id = "AccessPort">
         <canvas id = "sideBar"></canvas>
         <canvas id = "nameLabelBox"></canvas>
+        <canvas id = "weatherBox"></canvas>
         <label id = "NameLabel"> Username: </label>
         <label id = "RecentGroup"> Last Joined Group </label>
+        <label id = "CurrentWeather"> Weather In: </label>
       </div>
       <br><br>
     </div>
@@ -75,6 +77,7 @@
     <div id = "Settings">
       <!--<p id = "welcomeName">Welcome back!</p> -->
       <canvas id = "settingsCanvas"></canvas>
+      <canvas id = "settingsCanvas2"></canvas>
       <button id = "settingsButn0" onclick = "logout()" class = "settingsSideBar">Logout of Account</button>
       <br>
       <button id = "settingsButn1" onclick = "changeUsernamePrompt()" class = "settingsSideBar">Change Username</button>
@@ -85,10 +88,21 @@
       <br>
       <button id = "settingsButn4" onclick = "loggedIn()" class = "settingsSideBar">Back</button>
       <p id = "settingsText0" class = "settingsAbout">Securly Logout of your account</p>
+      
       <p id = "settingsText1" class = "settingsAbout">Change your account username</p>
+      
       <p id = "settingsText2" class = "settingsAbout">Change your account password</p>
+
+      
       <p id = "settingsText3" class = "settingsAbout">Delete your account:</p>
       <p id = "settingsText4" class = "settingsAbout">No data will stay on HerberTech Servers</p>
+      <button id = "settingsButnLearnMore" onclick = "learnMoreAccDel()" class = "settingsSideBar"> Learn More </button>
+
+      <p id = "settingsText5pt0" class = "settingsAbout">When your account is deleted</p>
+      <p id = "settingsText5pt1" class = "settingsAbout">It is completely wiped from HerberTech servers</p>
+      <p id = "settingsText5pt2" class = "settingsAbout">It is not recoverable and will be as</p>
+      <p id = "settingsText5pt3" class = "settingsAbout">if you never signed up</p>
+      
     </div>
 
     <div id = "deleteConfirmation">

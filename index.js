@@ -1,12 +1,13 @@
-const http = require("http");
+const http = require("node:http");
 const express = require("express");
 const socketio = require("socket.io");
-const path = require("path");
+const path = require("node:path");
 const sqlite3 = require("sqlite3");
 const helmet = require("helmet");
-const process = require("process");
-const inspector = require("inspector");
-const fs = require("fs");
+const process = require("node:process");
+const inspector = require("node:inspector");
+const fs = require("node:fs");
+const buffer = require("node:buffer");
 
 const inspectorSession = new inspector.Session();
 inspectorSession.connect();
@@ -60,17 +61,17 @@ inspectorSession.post('Profiler.enable', () => {
           console.log("a user joined the room");
           updateUser("lastchatroom", room, username);
         }
-      })
+      });
 
       socket.on("send", function(message) {
         io.in(rooms[socket.id]).emit("recieve", usernames[socket.id] + " : " + message);
         console.log("A user sent a message");
-      })
+      });
 
       socket.on("recieve", function(message) {
         socket.emit("recieve", message);
         console.log("user recieved a message");
-      })
+      });
 
       //todo: shrink down somehow
       socket.on("loginRequest", function(user, pass) {
@@ -90,7 +91,7 @@ inspectorSession.post('Profiler.enable', () => {
           }
 
         });
-      })
+      });
 
       //todo: shrink down somehow
       socket.on("signupRequest", function(user, pass, fname, lname) {
@@ -113,7 +114,7 @@ inspectorSession.post('Profiler.enable', () => {
             return socket.emit("signupResponse", "success");
           });
         })
-      })
+      });
 
       socket.on("logout", function(user, lastchatroom) {
         updateUser("lastchatroom", lastchatroom, user);
@@ -173,6 +174,33 @@ inspectorSession.post('Profiler.enable', () => {
             }
           }
         });
+      });
+
+      socket.on("getWeather", function (lati, long) {
+        const weatherApiKey = "";
+        const weatherReqOpt = {
+          hostname:  `api.openweathermap.org`,
+          port: 80,
+          path: `/data/2.5/weather?lat=${lati}&lon=${long}&appid=${weatherApiKey}`,
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        };
+        
+        const weatherApi = http.request(weatherReqOpt, (res) => {
+          res.on('data', (chunk) => {
+            const bChunk = buffer.Buffer.from(chunk);
+            
+            console.log(bChunk.toString());
+
+            socket.emit("getWeatherResponse", JSON.parse(bChunk.toString()));
+          });
+        });
+
+        weatherApi.on('error', (err) => {
+          console.log(err);
+        });
+
+        weatherApi.end();
       });
     });
   });

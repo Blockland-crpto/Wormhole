@@ -34,7 +34,11 @@ function onload(){
   document.getElementById("create").style.visibility = "hidden";
   document.getElementById("invalidPass").style.visibility = "hidden";
   document.getElementById("alreadyTakenUser").style.visibility = "hidden";
-    
+
+  if (!window.isSecureContext) {
+    console.error("This page must be loaded over HTTPS.");
+  }
+  
   socket = io();
 }
 
@@ -58,6 +62,10 @@ function sideNavAnimation() {
 function loggedIn() {
   const nameLabelBox = document.getElementById("nameLabelBox");
   const nameLabelBoxCtx = nameLabelBox.getContext("2d");
+  const weatherBox = document.getElementById("weatherBox");
+  const weatherBoxCtx = weatherBox.getContext("2d");
+  const navigator = window.navigator;
+  const geoLocater = navigator.geolocation; 
   
   chatIDInput = document.getElementById("IDInput");
   messageInput = document.getElementById("ComposedMessage");
@@ -66,9 +74,20 @@ function loggedIn() {
 
   clearScreen();
   menuNavAnimation();
-  sideNavAnimation()
-  
+  sideNavAnimation();
 
+  const locationInstance = geoLocater.getCurrentPosition(function(position) {
+    //we need to get the API JSON file
+
+    socket.emit("getWeather", position.coords.latitude, position.coords.longitude);
+
+    socket.on("getWeatherResponse", function(weather) {
+      const temp = ((weather.main.temp - 273.15) * 1.8 + 32); 
+      document.getElementById("CurrentWeather").innerHTML = `In ${weather.name} It is: ${Math.round(temp)} F`;
+      console.log(weather.main.temp);
+    });
+  });
+  
   document.getElementById("fname").style.visibility = "hidden";
   document.getElementById("lname").style.visibility = "hidden";
   document.getElementById("back").style.visibility = "hidden";
@@ -79,8 +98,12 @@ function loggedIn() {
   nameLabelBoxCtx.fillStyle = "#757575";
   nameLabelBoxCtx.fillRect(0, 0, nameLabelBox.width, nameLabelBox.height);
 
+  weatherBoxCtx.fillStyle = "#757575";
+  weatherBoxCtx.fillRect(0, 0, weatherBox.width, weatherBox.height);
+
   document.getElementById("NameLabel").innerHTML = `Welcome back: ${currentUser}`;
   document.getElementById("RecentGroup").innerHTML = `Recent Group: ${lastJoinedGroup}`;
+  
 }
 
 function Connect(){
@@ -100,7 +123,6 @@ function Send(){
 function delayReset(){
   delay = true;
 }
-
 
 /* Redirects Start */
 
@@ -196,16 +218,13 @@ function deleteAccount() {
 
 function settings() {
   const settingsDiv = document.getElementById("Settings");
-  const sb0 = document.getElementById("settingsButn0");
-  const sb1 = document.getElementById("settingsButn1");
-  const sb2 = document.getElementById("settingsButn2");
+  
   const sb3 = document.getElementById("settingsButn3");
   
-  const settingsText0 = document.getElementById("settingsText0");
-  const settingsText1 = document.getElementById("settingsText1");
-  const settingsText2 = document.getElementById("settingsText2");
   const settingsText3 = document.getElementById("settingsText3");
   const settingsText4 = document.getElementById("settingsText4");
+
+  const sbInfo = document.getElementById("settingsButnLearnMore");
   
   const keyframeSetup = [[
     { transform: "translateX(-80px)" }, // keyframe
@@ -225,24 +244,34 @@ function settings() {
   ]];
   
   const settingsCanvas = document.getElementById("settingsCanvas");
+  const settingsCanvas2 = document.getElementById("settingsCanvas2");
   const settingsCanvasCtx = settingsCanvas.getContext("2d"); 
   
   clearScreen();
   menuNavAnimation();
   sideNavAnimation();
+
   
-  settingsText0.style.display = "none";
-  settingsText1.style.display = "none";
-  settingsText2.style.display = "none";
-  settingsText3.style.display = "none";
-  settingsText4.style.display = "none";
+  for (let i = 0; i < 5; i++) {
+    const settingsText = document.getElementById(`settingsText${i}`);
+    settingsText.style.display = "none";
+  }
+
+  for (let i = 0; i < 4; i++) {
+    const settingsText5 = document.getElementById(`settingsText5pt${i}`);
+    settingsText5.style.display = "none";
+  }
+  
+  sbInfo.style.display = "none";
+  
   settingsCanvas.style.display = "none";
+  settingsCanvas2.style.display = "none";
   
   settingsDiv.style.display = "block";
   
   settingsCanvasCtx.fillStyle = "black";
   
-  settingsCanvasCtx.fillRect(0, 0, 400, 200);
+  settingsCanvasCtx.fillRect(0, 0, settingsCanvas.width, settingsCanvas.height);
   
   for (let i = 0; i < 5; i++) {
     const rollInKeyframe = new KeyframeEffect(
@@ -256,46 +285,56 @@ function settings() {
     rollInAnimation.play();
   } 
 
-  sb0.addEventListener("mouseover", (event) => {
-    settingsText0.style.display = "block";
-    fadeInElement(settingsCanvas);
-  });
+  for (let i = 0; i < 3; i++) {
+    const settingsButton = document.getElementById(`settingsButn${i}`);
+    const settingsText = document.getElementById(`settingsText${i}`);
 
-  sb0.addEventListener("mouseleave", (event) => {
-    settingsText0.style.display = "none";
-    settingsCanvas.style.display = "none";
-  });
-
-  sb1.addEventListener("mouseover", (event) => {
-    settingsText1.style.display = "block";
-    fadeInElement(settingsCanvas);
-  });
-
-  sb1.addEventListener("mouseleave", (event) => {
-    settingsText1.style.display = "none";
-    settingsCanvas.style.display = "none";
-  });
-
-  sb2.addEventListener("mouseover", (event) => {
-    settingsText2.style.display = "block";
-    fadeInElement(settingsCanvas);
-  });
-
-  sb2.addEventListener("mouseleave", (event) => {
-    settingsText2.style.display = "none";
-    settingsCanvas.style.display = "none";
-  });
+    settingsButton.addEventListener("mouseover", (event) => {
+      settingsText.style.display = "block";
+      fadeInElement(settingsCanvas);
+    });
+    
+    settingsButton.addEventListener("mouseleave", (event) => {
+      settingsText.style.display = "none";
+      settingsCanvas.style.display = "none";
+    });
+  }
 
   sb3.addEventListener("mouseover", (event) => {
+    sbInfo.style.display = "block";
     settingsText3.style.display = "block";
     settingsText4.style.display = "block";
     fadeInElement(settingsCanvas);
   });
 
-  sb3.addEventListener("mouseleave", (event) => {
-    settingsText3.style.display = "none";
-    settingsText4.style.display = "none";
-    settingsCanvas.style.display = "none";
+  sb3.addEventListener("mouseleave", function onEvent (event) {
+
+    //we need to see if its over the fade if
+    const canvasQuery = document.querySelector("#settingsCanvas");
+    const textQuery = document.querySelector("#settingsText3");
+    const textQuery2 = document.querySelector("#settingsText4");
+    const learnButnQuery = document.querySelector("#settingsButnLearnMore");
+    
+    setTimeout(function () {
+      if (canvasQuery.matches(":hover") || textQuery.matches(":hover") || textQuery2.matches(":hover")) {
+        //its over the canvas, add a event listner to see if it leaves
+        settingsCanvas.addEventListener("mouseleave", (event) => {
+          if (!textQuery.matches(":hover") && !textQuery2.matches(":hover") && !learnButnQuery.matches(":hover")) {
+            sbInfo.style.display = "none";
+            settingsText3.style.display = "none";
+            settingsText4.style.display = "none";
+            settingsCanvas.style.display = "none";
+            settingsCanvas.removeEventListener("mouseleave", onEvent);
+          }
+        });
+      } else {
+        sbInfo.style.display = "none";
+        settingsText3.style.display = "none";
+        settingsText4.style.display = "none";
+        settingsCanvas.style.display = "none";
+      }
+    }, 100);
+
   });
 }
 
@@ -392,6 +431,50 @@ function about() {
   menuNavAnimation();
   clearScreen();
   document.getElementById("About").style.display = "block";
+}
+
+function learnMoreAccDel() {
+  const settingsCanvas = document.getElementById("settingsCanvas");
+  const settingsCanvas2 = document.getElementById("settingsCanvas2");
+  const settingsCanvasCtx2 = settingsCanvas2.getContext("2d");
+
+  const sbInfo = document.getElementById("settingsButnLearnMore");
+
+  sbInfo.style.display = "none";
+  settingsCanvas.style.display = "none";
+  settingsCanvas2.style.display = "none";
+  
+  for (let i = 0; i < 5; i++) {
+    const settingsText = document.getElementById(`settingsText${i}`);
+    settingsText.style.display = "none";
+  }
+
+  settingsCanvasCtx2.fillStyle = "black";
+
+  settingsCanvasCtx2.fillRect(0, 0, settingsCanvas2.width, settingsCanvas2.height);
+
+  settingsCanvas2.style.display = "block";
+  
+  for (let i = 0; i < 4; i++) {
+    const settingsText5 = document.getElementById(`settingsText5pt${i}`);
+    settingsText5.style.display = "block";
+  }
+  
+  settingsCanvas2.addEventListener("mouseleave", function onEvent(event) {
+    const settingsText5pt0Query = document.querySelector("#settingsText5pt0");
+    const settingsText5pt1Query = document.querySelector("#settingsText5pt1");
+    const settingsText5pt2Query = document.querySelector("#settingsText5pt2");
+    const settingsText5pt3Query = document.querySelector("#settingsText5pt3");
+
+    if (!settingsText5pt0Query.matches(":hover") && !settingsText5pt1Query.matches(":hover") && !settingsText5pt2Query.matches(":hover") && !settingsText5pt3Query.matches(":hover")) {
+      settingsCanvas2.style.display = "none";
+      for (let i = 0; i < 4; i++) {
+        const settingsText = document.getElementById(`settingsText5pt${i}`);
+        settingsText.style.display = "none";
+      }
+      settingsCanvas2.removeEventListener("mouseleave", onEvent);
+    }
+  });
 }
 
 function fadeInElement(element) {

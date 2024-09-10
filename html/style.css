@@ -25,15 +25,15 @@ input {
 /* Settings begin */
 .settingsSideBar {
   position: absolute;
-  left: 2%;
-  height: 60px;
-  width: 75px;
+  left: 0%;
+  height: 7%;
+  width: 7%;
 }
 
 .settingsAbout {
   position:absolute;
-  left: 22%;
-  top: 20%;
+  left: 15%;
+  top: 30%;
   align-content: center;
   color: #919191;
 }
@@ -60,12 +60,39 @@ input {
 
 #settingsCanvas {
   position: absolute;
-  left: 22%;
-  top: 20%;
+  left: 12%;
+  top: 30%;
+  width: 50%;
+  height: 40%;
+}
+
+#settingsCanvas2 {
+  position: absolute;
+  left: 12%;
+  top: 30%;
+  width: 50%;
+  height: 40%;
 }
 
 #settingsText4 {
-  top: 24%;
+  top: 35%;
+}
+
+#settingsText5pt1 {
+  top: 35%;
+}
+
+#settingsText5pt2 {
+  top: 40%;
+}
+
+#settingsText5pt3{
+  top: 45%;
+}
+
+#settingsButnLearnMore {
+  left: 15%;
+  top: 45%;
 }
 
 /* Settings end */
@@ -113,7 +140,7 @@ input {
   top: 0px;
   height: 100%;
   left: 0px;
-  width: 105px;
+  width: 7%;
 }
 
 #NameLabel {
@@ -121,6 +148,7 @@ input {
   top: 15%;
   left: 10px;
   color: #d4d4d4;
+  width: 6%;
 }
 
 #RecentGroup {
@@ -130,12 +158,29 @@ input {
   color: #d4d4d4;
 }
 
+#CurrentWeather {
+  position: absolute;
+  top: 67%;
+  left: 9px;
+  color: #d4d4d4;
+  width: 6%;
+}
+
 #nameLabelBox {
   position: absolute;
-  left: 0px;
+  left: 10px;
   top: 34%;
   height: 90px;
-  width: 90px;
+  width: 6%;
+  border-radius: 25%;
+}
+
+#weatherBox {
+  position: absolute;
+  left: 10px;
+  top: 64%;
+  height: 90px;
+  width: 6%;
   border-radius: 25%;
 }
 
@@ -145,7 +190,6 @@ input {
   background: #1e5a80;
   border-radius: 5%;
 }
-
 
 button {
   color: #000000;
