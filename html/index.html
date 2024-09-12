@@ -67,7 +67,9 @@
       <input id = "fname" type = "text" placeholder = "First Name">
       <input id = "lname" type = "text" placeholder = "Last Name">
       <p id = "invalidPass">Invalid password or username</p>
+      <p id = "loginError">Error trying to login, try again later</p>
       <p id = "alreadyTakenUser">Username already exists, Login instead</p>
+      <p id = "signupError">Error trying to signup, try again later</p>
       <button id = "logon" onclick = "login()">Login</button>
       <button id = "signup" onclick = "signupRedirect()">Not a User? Signup!</button>
       <button id = "create" onclick = "signup()"> Signup </button>
@@ -106,9 +108,10 @@
     </div>
 
     <div id = "deleteConfirmation">
-      <p>Are you sure you want to delete your account?</p>
-      <button onclick = "deleteAccount()">Yes</button>
-      <button onclick = "settings()">No</button>
+      <p id = "deleteText">Are you sure you want to delete your account?</p>
+      <button id = "deletebutton1" onclick = "deleteAccount()">Yes</button>
+      <button id = "deletebutton2" onclick = "settings()">No</button>
+      <p id = "deleteErrorText">We're sorry, but we appear to have a issue deleteing your account</p>
     </div>
 
     <div id = "changeUsernamePrompt">

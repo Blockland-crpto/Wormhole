@@ -33,7 +33,9 @@ function onload(){
   document.getElementById("lname").style.visibility = "hidden";
   document.getElementById("create").style.visibility = "hidden";
   document.getElementById("invalidPass").style.visibility = "hidden";
+  document.getElementById("loginError").style.visibility = "hidden";
   document.getElementById("alreadyTakenUser").style.visibility = "hidden";
+  document.getElementById("signupError").style.visibility = "hidden";
 
   if (!window.isSecureContext) {
     console.error("This page must be loaded over HTTPS.");
@@ -163,6 +165,9 @@ function login() {
       document.getElementById("alreadyTakenUser").style.visibility = "hidden";
       invalidPasswd.style.visibility = "hidden";
       loggedIn();
+    } else if (response == "error") {
+      //oops
+      document.getElementById("loginError").style.visibility = "hidden";
     } else {
       invalidPasswd.style.visibility = "visible";
     }
@@ -175,17 +180,35 @@ function signup() {
   const fnameInput = document.getElementById("fname").value;
   const lnameInput = document.getElementById("lname").value;
   const alreadyTakenUser = document.getElementById("alreadyTakenUser");
+  const signupFailure = document.getElementById("signupError");
   
   socket.emit("signupRequest", userInput, passInput, fnameInput, lnameInput);
   
   socket.on("signupResponse", function(response){
-    if (response == "success") {
-      currentUser = fnameInput;
-      alreadyTakenUser.style.visibility = "hidden";
-      document.getElementById("invalidPass").style.visibility = "hidden";
-      loggedIn();
-    } else {
-      alreadyTakenUser.style.visibility = "visible";
+
+    switch (response) {
+      case "success": {
+        currentUser = fnameInput;
+        alreadyTakenUser.style.visibility = "hidden";
+        signupFailure.style.visibility = "hidden";
+        document.getElementById("invalidPass").style.visibility = "hidden";
+        loggedIn();
+        break;
+      }
+      case "alreadyExists": {
+        signupFailure.style.visibility = "hidden";
+        alreadyTakenUser.style.visibility = "visible";
+        break;
+      }
+      case "failure": {
+        alreadyTakenUser.style.visibility = "hidden";
+        signupFailure.style.visibility = "visible";
+        break;
+      }
+      default: {
+        console.error("Invalid response from server when signup request made.\nExpected: success, alreadyExists, failure\nGot: " + response);
+        break;
+      }
     }
   })
 }
@@ -211,7 +234,13 @@ function deleteAccount() {
     if (response == "success") {
       logout();
     } else {
-      //todo
+      document.getElementById("deleteText").style.display = "none";
+      document.getElementById("deletebutton1").style.display = "none";
+      document.getElementById("deletebutton2").style.display = "none";
+      document.getElementById("deleteErrorText").style.display = "block";
+      setTimeout(function () {
+        loggedIn();
+      }, 2000);
     }
   });
 }
@@ -340,7 +369,11 @@ function settings() {
 
 function deletePrompt() {
   clearScreen();
+  document.getElementById("deleteErrorText").style.display = "none";
   document.getElementById("deleteConfirmation").style.display = "block";
+  document.getElementById("deleteText").style.display = "block";
+  document.getElementById("deletebutton1").style.display = "block";
+  document.getElementById("deletebutton2").style.display = "block";
 }
 
 function changeUsernamePrompt() {
@@ -437,7 +470,6 @@ function learnMoreAccDel() {
   const settingsCanvas = document.getElementById("settingsCanvas");
   const settingsCanvas2 = document.getElementById("settingsCanvas2");
   const settingsCanvasCtx2 = settingsCanvas2.getContext("2d");
-
   const sbInfo = document.getElementById("settingsButnLearnMore");
 
   sbInfo.style.display = "none";

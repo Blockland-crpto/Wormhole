@@ -1,5 +1,6 @@
 db/
 logs/
+key/
 .upm
 node_modules
 .git
